@@ -1,14 +1,10 @@
+from django.core.cache import caches
+from django.core.cache.backends.locmem import LocMemCache
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.signals import post_save
-from django.core.cache import get_cache
-
-try:
-    from django.core.cache.backends.locmem import LocMemCache
-except ImportError:
-    from django.core.cache.backends.locmem import CacheClass as LocMemCache
 
 from .. import Backend
-from ... import settings
+from ... import settings, signals, config
 
 
 class DatabaseBackend(Backend):
@@ -25,12 +21,12 @@ class DatabaseBackend(Backend):
                 "correctly. Make sure it's in your INSTALLED_APPS setting.")
 
         if settings.DATABASE_CACHE_BACKEND:
-            self._cache = get_cache(settings.DATABASE_CACHE_BACKEND)
+            self._cache = caches[settings.DATABASE_CACHE_BACKEND]
             if isinstance(self._cache, LocMemCache):
                 raise ImproperlyConfigured(
                     "The CONSTANCE_DATABASE_CACHE_BACKEND setting refers to a "
-                    "subclass of Django's local-memory backend (%r). Please set "
-                    "it to a backend that supports cross-process caching."
+                    "subclass of Django's local-memory backend (%r). Please "
+                    "set it to a backend that supports cross-process caching."
                     % settings.DATABASE_CACHE_BACKEND)
         else:
             self._cache = None
@@ -65,6 +61,9 @@ class DatabaseBackend(Backend):
         key = self.add_prefix(key)
         if self._cache:
             value = self._cache.get(key)
+            if value is None:
+                self.autofill()
+                value = self._cache.get(key)
         else:
             value = None
         if value is None:
@@ -84,11 +83,16 @@ class DatabaseBackend(Backend):
         if not created:
             constance.value = value
             constance.save()
+        if self._cache:
+            self._cache.set(key, value)
+
+        signals.config_updated.send(
+            sender=config, updated_key=key, new_value=value
+        )
 
     def clear(self, sender, instance, created, **kwargs):
         if self._cache and not created:
-            keys = [self.add_prefix(k)
-                    for k in settings.CONFIG.keys()]
+            keys = [self.add_prefix(k) for k in settings.CONFIG.keys()]
             keys.append(self.add_prefix(self._autofill_cachekey))
             self._cache.delete_many(keys)
             self.autofill()

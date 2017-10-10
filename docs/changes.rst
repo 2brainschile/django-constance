@@ -1,6 +1,109 @@
 Changelog
 ---------
 
+v1.3.4 (2016/12/23)
+~~~~~~~~~~~~~~~~~~~
+
+* Fix config ordering issue
+
+* Added localize to check modified flag
+
+* Allow to rename Constance in Admin
+
+* Preserve line breaks in default value
+
+* Added functionality from django-constance-cli
+
+* Added "Reset to default" feature
+
+v1.3.3 (2016/09/17)
+~~~~~~~~~~~~~~~~~~~
+
+* Revert broken release
+
+v1.3.2 (2016/09/17)
+~~~~~~~~~~~~~~~~~~~
+
+* Fixes a bug where the signal was sent for fields without changes
+
+v1.3.1 (2016/09/15)
+~~~~~~~~~~~~~~~~~~~
+
+* Improved the signal path to avoid import errors
+
+* Improved the admin layout when using fieldsets
+
+v1.3 (2016/09/14)
+~~~~~~~~~~~~~~~~~
+
+* **BACKWARD INCOMPATIBLE** Dropped support for Django < 1.8).
+
+* Added ordering constance fields using OrderedDict
+
+* Added a signal when updating constance fields
+
+v1.2.1 (2016/09/1)
+~~~~~~~~~~~~~~~~~~
+
+* Added some fixes to small bugs
+
+* Fix cache when key changes
+
+* Upgrade django_redis connection string
+
+* Autofill cache key if key is missing
+
+* Added support for fieldsets
+
+v1.2 (2016/05/14)
+~~~~~~~~~~~~~~~~~
+
+* Custom Fields were added as a new feature
+
+* Added documentation on how to use Custom settings form
+
+* Introduced ``CONSTANCE_IGNORE_ADMIN_VERSION_CHECK``
+
+* Improved documentation for ``CONSTANCE_ADDITIONAL_FIELDS``
+
+v1.1.2 (2016/02/08)
+~~~~~~~~~~~~~~~~~~~
+
+* Moved to Jazzband organization (https://github.com/jazzband/django-constance)
+
+* Added Custom Fields
+
+* Added Django 1.9 support to tests
+
+* Fixes icons for Django 1.9 admin
+
+v1.1.1 (2015/10/01)
+~~~~~~~~~~~~~~~~~~~
+
+* Fixed a regression in the 1.1 release that prevented the rendering of the
+  admin view with constance values when using the context processor at the
+  same time.
+
+v1.1 (2015/09/24)
+~~~~~~~~~~~~~~~~~
+
+* **BACKWARD INCOMPATIBLE** Dropped support for Python 2.6
+  The supported versions are 2.7, 3.3 (on Django < 1.9) and 3.4.
+
+* **BACKWARD INCOMPATIBLE** Dropped support for Django 1.4, 1.5 and 1.6
+  The supported versions are 1.7, 1.8 and the upcoming 1.9 release
+
+* Added compatibility to Django 1.8 and 1.9.
+
+* Added Spanish and Chinese (``zh_CN``) translations.
+
+* Added :class:`override_config` decorator/context manager for easy
+  :doc:`testing <testing>`.
+
+* Added the ability to use linebreaks in config value help texts.
+
+* Various testing fixes.
+
 v1.0.1 (2015/01/07)
 ~~~~~~~~~~~~~~~~~~~
 
@@ -11,7 +114,7 @@ v1.0 (2014/12/04)
 
 * Added docs and set up Read The Docs project:
 
-  http://django-constance.readthedocs.org/
+  https://django-constance.readthedocs.io/
 
 * Set up Transifex project for easier translations:
 
